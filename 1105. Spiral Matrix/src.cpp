@@ -9,10 +9,18 @@ using namespace std;
 #define LEFT 3
 #define UP 4
 
+bool cmp(int x, int y)
+{
+    return x > y;
+}
+
 int main()
 {
     int n;
     cin >> n;
+    if (n == 0)
+        return 0;
+
     int r, c;
     for (int i = 1; i <= sqrt(n); i++)
     {
@@ -32,8 +40,8 @@ int main()
         cin >> tmp;
         nums.push_back(tmp);
     }
-    
 
+    sort(nums.begin(), nums.end(), cmp);
     for (int i = 0; i < n; i++)
     {
         num = nums[i];
@@ -95,5 +103,17 @@ int main()
         }
         matrix[x][y] = num;
     }
+
+    for (int i = 0; i < r; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            cout << matrix[i][j];
+            if (j != c - 1)
+                cout << ' ';
+        }
+        cout << endl;
+    }
+
     return 0;
 }
