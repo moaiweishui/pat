@@ -4,11 +4,6 @@
 
 using namespace std;
 
-int sumMoney(vector<int>& coins, int i, int j)
-{
-    return coins[i] + coins[j];
-}
-
 int main()
 {
     int n;
