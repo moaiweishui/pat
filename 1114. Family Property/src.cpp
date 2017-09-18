@@ -182,3 +182,181 @@ int main()
 
     return 0;
 }
+
+
+/****************** Solution 2 *******************/
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <sstream>
+
+using namespace std;
+
+struct people{
+    int id;
+    int family_id;
+    double estate_num;
+    double estate_area;
+    people(int id) : id(id), family_id(-1), estate_num(0), estate_area(0){}
+};
+
+struct family{
+    int family_id;
+    int people_num;
+    double estate_num;
+    double estate_area;
+};
+
+bool cmp(family* a, family* b)
+{
+    if ((a->estate_area / a->people_num) > (b->estate_area / b->people_num))
+        return true;
+    else if ((a->estate_area / a->people_num) < (b->estate_area / b->people_num))
+        return false;
+    else
+        return a->family_id < b->family_id;
+}
+
+void unionMerge(vector<people*>& peoples, vector<int>& people_vec, int id1, int id2)
+{
+    if (id2 == -1)
+        return;
+
+    if (peoples[id1]->family_id < peoples[id2]->family_id)
+    {
+        int tmp1 = peoples[id2]->family_id;
+        int tmp2 = peoples[id1]->family_id;
+        for (int i = 0; i < people_vec.size(); i++)
+        {
+            if (peoples[people_vec[i]]->family_id == tmp1)
+                peoples[people_vec[i]]->family_id = tmp2;
+        }
+    }
+    else if (peoples[id1]->family_id > peoples[id2]->family_id)
+    {
+        int tmp1 = peoples[id1]->family_id;
+        int tmp2 = peoples[id2]->family_id;
+        for (int i = 0; i < people_vec.size(); i++)
+        {
+            if (peoples[people_vec[i]]->family_id == tmp1)
+                peoples[people_vec[i]]->family_id = tmp2;
+        }
+    }
+
+    return;
+}
+
+int main()
+{
+    vector<people*> peoples;
+
+    for (int i = 0; i < 10000; i++)
+    {
+        people* newpeople = new people(i);
+        peoples.push_back(newpeople);
+    }
+
+    int n;
+    cin >> n;
+
+    int buf1, buf2, buf3;
+    int child_num, child;
+    double num, area;
+
+    vector<int> people_vec;
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> buf1;
+        people_vec.push_back(buf1);
+        if (peoples[buf1]->family_id == -1)
+            peoples[buf1]->family_id = buf1;
+
+        cin >> buf2;
+        if (buf2 != -1)
+        {
+            people_vec.push_back(buf2);
+            if (peoples[buf2]->family_id == -1)
+                peoples[buf2]->family_id = buf2;
+            unionMerge(peoples, people_vec, buf1, buf2);
+        }
+
+        cin >> buf3;
+        if (buf3 != -1)
+        {
+            people_vec.push_back(buf3);
+            if (peoples[buf3]->family_id == -1)
+                peoples[buf3]->family_id = buf3;
+            unionMerge(peoples, people_vec, buf1, buf3);
+        }
+        
+
+        cin >> child_num;
+        for (int j = 0; j < child_num; j++)
+        {
+            cin >> child;
+            people_vec.push_back(child);
+            if (peoples[child]->family_id == -1)
+                peoples[child]->family_id = child;
+            unionMerge(peoples, people_vec, buf1, child);
+        }
+        cin >> num;
+        cin >> area;
+        peoples[buf1]->estate_num = num;
+        peoples[buf1]->estate_area = area;
+    }
+    
+    unordered_map<int, family*> hmap;
+
+    for (int i = 0; i < 10000; i++)
+    {
+        if (peoples[i]->family_id != -1)
+        {
+            int fid = peoples[i]->family_id;
+            auto it = hmap.find(fid);
+            if (it != hmap.end())
+            {
+                hmap[fid]->people_num++;
+                hmap[fid]->estate_num += peoples[i]->estate_num;
+                hmap[fid]->estate_area += peoples[i]->estate_area;
+            }
+            else
+            {
+                family* new_family = new family();
+                new_family->family_id = fid;
+                new_family->people_num = 1;
+                new_family->estate_num = peoples[i]->estate_num;
+                new_family->estate_area = peoples[i]->estate_area;
+                hmap[fid] = new_family;
+            }
+        }
+    }
+
+    int family_num = hmap.size();
+
+    vector<family*> output;
+
+    for (auto it = hmap.begin(); it != hmap.end(); it++)
+    {
+        output.push_back((*it).second);
+    }
+
+    sort(output.begin(), output.end(), cmp);
+
+    cout << family_num << endl;
+
+    for (int i = 0; i < family_num; i++)
+    {
+        printf("%04d %d %.3lf %.3lf\n",
+            output[i]->family_id, 
+            output[i]->people_num, 
+            output[i]->estate_num / output[i]->people_num,
+            output[i]->estate_area / output[i]->people_num
+            );
+    }
+
+    return 0;
+}
