@@ -1,0 +1,1 @@
+先出现k及k倍数次，后面又出现非k倍数次，则这个是正常键，例如bbbaaaaaataa，答案应该是baaaaaataa
