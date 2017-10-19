@@ -1,0 +1,2 @@
+- Binary search
+- 输入输出用scanf与printf，如果只把输入改用scanf，而输出为cout，则有测试点3超时
