@@ -1,0 +1,1 @@
+- 在插入map时，不要忘记在遍历结束后，把buffer中残存的最后一个word插入map，例如abc??abc..abc，遍历结束后，最后一个abc还在buffer中而没有进入map
