@@ -1,0 +1,2 @@
+- 平行志愿
+- 一开始，用applications依次存下学生申请信息，此时applications中位置为i的地方存的是id为i的信息，但是经过排序，这个就乱掉了，后面在索引id为i的信息时，就不能去applications进行索引，因此一开始需要初始化一个student_vec来存储申请学生的信息
