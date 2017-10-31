@@ -86,7 +86,7 @@ int main()
             break;
         }
     }
-    mm = 0;
+    
     for (int j = 0; j < s3.length() && j < s4.length(); j++)
     {
         if (s3[j] == s4[j] && valid2(s3[j]))
