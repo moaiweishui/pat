@@ -19,28 +19,50 @@
 
 using namespace std;
 
-int reverse(int num)
+string convert(int num, int radix)
 {
-    string s;
-    stringstream ss;
-    ss << num;
-    ss >> s;
-
-    reverse(s.begin(), s.end());
-    stringstream res_ss;
-    int res;
-
-    res_ss << s;
-    res_ss >> res;
-
+    string res = "";
+    int x = num;
+    while (x)
+    {
+        res = char(x % radix + '0') + res;
+        x = x / radix;
+    }
     return res;
 }
 
-bool isPrime(int num, int radix)
+int returnToDec(string s, int radix)
 {
+    int res = 0;
 
+    for (int i = 0; i < s.length(); i++)
+    {
+        res *= radix;
+        res += s[i] - '0';
+    }
+    return res;
+}
 
+int reverseNum(int num, int radix)
+{
+    string s = convert(num, radix);
+    reverse(s.begin(), s.end());
 
+    return returnToDec(s, radix);
+}
+
+bool isPrime(int num)
+{
+    if (num <= 1)
+        return false;
+    else if (num <= 3)
+        return true;
+
+    for (int i = 2; i < sqrt(num) + 1; i++)
+    {
+        if (num % i == 0)
+            return false;
+    }
 
     return true;
 }
@@ -61,11 +83,12 @@ int main() {
 
     for (int i = 0; i < vec.size(); i++)
     {
-        if (isPrime(vec[i].first, vec[i].second)
-            && isPrime(reverse(vec[i].first), vec[i].second))
+        if (isPrime(vec[i].first)
+            && isPrime(reverseNum(vec[i].first, vec[i].second)))
             cout << "Yes" << endl;
         else
             cout << "No" << endl;
+
     }
 
 
